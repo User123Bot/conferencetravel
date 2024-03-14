@@ -74,5 +74,10 @@ python manage.py runserver
 You will need to be in the `CTET` directory to do this.
 
 * To stop the development server, you can simply just do `CTRL+C` in the terminal.
+* If you do end up installing new packages, navigate to the root of the repository, while within your `venv` virtual envrionment, do:
+
+```
+pip freeze >> requirements.txt
+```
 
 **Always remember to activate the virtual envrionment before running any Django management command or installing new packages with `pip`.**
