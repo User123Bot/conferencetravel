@@ -64,6 +64,7 @@ deactivate
 
 * Always ensure the virtual environment is activated before running the project or installing new packages to keep your project's dependencies isolated. Please let the team know that you are installing new packages!
 * After installing any new packages during development, update `requirements.txt` using `pip freeze > requirements.txt` (within the virtual envrionment) so that other team members can install the same versions.
+* `.bashrc` script will be provided to automate the virtual envrionment activation for you.
 * You should only be programming with the virtual envrionment activated!
 * To run the development server, execute:
 
