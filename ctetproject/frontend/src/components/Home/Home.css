@@ -1,0 +1,111 @@
+/* This file contains the style code for the Home.js file */
+
+/* Animate the title text in from the left */
+@keyframes titleFromLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  60% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+/* Animate bottom text to come in from the bottom */
+@keyframes textEaseIn {
+  from {
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
+  }
+}
+
+/* Home.css */
+.home-section {
+  top: 0;
+  left: 0;
+  margin-top: -10vh;
+  background-image: url('../../../images/Qantas_a220_Uluru.avif');
+  background-size: cover;
+  filter: saturate(110%) sepia(10%);
+  background-position: top;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; /* Align to the start to push towards the left */
+  min-height: 110vh;
+  color: #FEFCEE;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+  text-align: left; /* Align text to the left */
+}
+
+/* Semi-transparent backing colour to allow for better readability given the picture background */
+.home-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust the RGBA values to change the color and opacity */
+}
+
+.home-section h1 {
+  z-index: 1;
+  margin: 0;
+  margin-top: -15%;
+  font-size: 6em;
+  font-style: italic;
+  font-weight: bolder;
+  color: #FEFCEE;
+  letter-spacing: 2px;
+  padding-left: 5%; /* Push content towards the left */
+  max-width: 70%; /* Ensure the text does not span the full width */
+  animation: titleFromLeft 1.5s;
+}
+
+.home-section h2 {
+  z-index: 1;
+  margin: 0.5em 0;
+  font-size: 2em;
+  font-style: italic;
+  font-weight: lighter;
+  color: #FEFCEE;
+  padding-left: 5%; /* Push content towards the left */
+  padding-top: 1%;
+  max-width: 30%;
+  animation: titleFromLeft 1.5s;
+}
+
+.home-section p {
+  text-align: center;
+  z-index: 1;
+  font-size: 1em;
+  font-weight: lighter;
+  color: #FEFCEE;
+  position: absolute;
+  bottom: 10px;
+  font-style: italic;
+  left: 50%;
+  padding-bottom: 5%;
+  transform: translateX(-50%);
+  animation: textEaseIn 3s;
+}
+
+/* Responsive behavior for smaller screens */
+@media (max-width: 768px) {
+  .home-section {
+    align-items: center; /* Center alignment on smaller screens */
+    text-align: center;
+  }
+
+  .home-section h1,
+  .home-section h2 {
+    padding-left: 0;
+    max-width: 100%;
+  }
+}

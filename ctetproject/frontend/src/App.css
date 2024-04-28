@@ -1,29 +1,34 @@
 /* App.css */
-
-/* Style for your sections, adjust the min-height as needed */
-.section {
-  min-height: 100vh; /* vh is viewport height, so 100vh will fill the screen */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 20px;
-  box-sizing: border-box;
+.App {
+  overflow-y: scroll;
+  height: 100vh; /* Full viewport height */
 }
 
-/* Example background colors, you can change these to whatever you like */
-#home {
-  background-color: #ffffff;
+.snap-target {
+  height: 100vh; 
+  border-top: 1px solid #6d6c6c;
 }
 
-#context {
-  background-color: #e9ecef;
+/* This styles the scrollbar track (the part the thumb moves within) */
+::-webkit-scrollbar {
+  width: 10px; /* Width of the vertical scrollbar */
+  height: 10px; /* Height of the horizontal scrollbar */
 }
 
-#calculator {
-  background-color: #dee2e6;
+/* This styles the scrollbar thumb (the movable part) */
+::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the thumb */
+  border-radius: 5px; /* Rounded corners on the thumb */
 }
 
-#results {
-  background-color: #ced4da;
+/* This styles the thumb when it's being hovered over */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Darker color on hover */
+}
+
+
+/* For windows 10+ styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #F4F1DE; /* thumb and track color */
 }
