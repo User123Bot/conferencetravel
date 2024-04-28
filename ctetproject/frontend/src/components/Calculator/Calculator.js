@@ -411,84 +411,53 @@ const Calculator = () => {
   };
 
 
-  const UploadResults = ({ uploadResult }) => {
-    if (!uploadResult) return null;
+  //this is where we will call to backend to get the emissions algo stuff
+  const handleCalculateEmissions = async () => {
+    // toggling loading cursor to indicate a brief wait period
+    document.body.classList.add('loading-cursor')
 
-    return (
-      <div className="results-container">
-        <p>{uploadResult.message}</p>
-        {uploadResult.errors && (
-          <div>
-            <h4>Errors:</h4>
-            {uploadResult.errors.map((error, index) => (
-              <div key={index} className="error">{error}</div>
-            ))}
-          </div>
-        )}
-        {uploadResult.results && (
-          <div>
-            <h4>Results:</h4>
-            <div className="data-container">
-              {uploadResult.results.data.map((row, index) => (
-                <div key={index} className="data-row">
-                  <span>{row.country}</span>
-                  <span>{row.city}</span>
-                  <span>{row.number}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-    //this is where we will call to backend to get the emissions algo stuff
-    const handleCalculateEmissions = async () => {
-      // toggling loading cursor to indicate a brief wait period
-      document.body.classList.add('loading-cursor')
+    console.log("Calculate Button Clicked")
+    // these are the preferred cities that'll be passed into backend
+    const formattedPreferredCities = preferredCities.map(city => city.name)
+    // these are guest details that'll be passed into backend
+    const formattedguestInformation = guestInformation.map(city => [city.name, city.attendees])
+
+
+    const endpoint = 'http://localhost:8000/calculate-emissions/'
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          destinations: formattedPreferredCities,
+          origins: formattedguestInformation,
+        }),
+      });
   
-      console.log("Calculate Button Clicked")
-      // these are the preferred cities that'll be passed into backend
-      const formattedPreferredCities = preferredCities.map(city => city.name)
-      // these are guest details that'll be passed into backend
-      const formattedguestInformation = guestInformation.map(city => [city.name, city.attendees])
-  
-  
-      const endpoint = 'http://localhost:8000/calculate-emissions/'
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            destinations: formattedPreferredCities,
-            origins: formattedguestInformation,
-          }),
-        });
-    
-        // error with connection/parsing, http based
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-    
-        const results = await response.json();
-        if (results) {
-          console.log("Emissions Calculation Results:", results);
-          // on completion of the calculation, scroll into results section
-          document.getElementById('results').scrollIntoView({ behavior: 'smooth' })
-          setEmissionsData(results.total_emissions);
-          // remove loading cursor, indicate completion
-          document.body.classList.remove('loading-cursor');
-        }
-  
-      } catch (error) {
-        // reset cursor for error
-        document.body.classList.remove('loading-cursor');
-        // TODO: make this an built-in website text message
-        console.error("Failed to calculate emissions:", error);
+      // error with connection/parsing, http based
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
+  
+      const results = await response.json();
+      if (results) {
+        console.log("Emissions Calculation Results:", results);
+        // on completion of the calculation, scroll into results section
+        document.getElementById('results').scrollIntoView({ behavior: 'smooth' })
+        setEmissionsData(results.total_emissions);
+        // remove loading cursor, indicate completion
+        document.body.classList.remove('loading-cursor');
+      }
+
+    } catch (error) {
+      // reset cursor for error
+      document.body.classList.remove('loading-cursor');
+      // TODO: make this an built-in website text message
+      console.error("Failed to calculate emissions:", error);
+    }
+  };
   
   // Handler for changing origin city input
   const handleOriginCityChange = (e) => {
