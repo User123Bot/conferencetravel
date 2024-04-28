@@ -1,6 +1,9 @@
 // Calculator.js
 import React, { useState, useEffect } from "react";
 import { useTransition, animated } from "@react-spring/web";
+import "./Calculator.css";
+
+// ManualCarousel component for manual carousel functionality
 import { useEmissions } from '../../EmissionsContext';
 import "./Calculator.css";
 
@@ -10,12 +13,14 @@ const ManualCarousel = ({ children }) => {
   const [direction, setDirection] = useState('right');
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Function to navigate to previous slide
   const goToPrevious = () => {
     if (!isAnimating) {
       setDirection('left');
       setCurrentIndex((prevIndex) => (prevIndex - 1 + children.length) % children.length);
     }
   };
+  // Function to navigate to next slide
 
   const goToNext = () => {
     if (!isAnimating) {
@@ -25,6 +30,7 @@ const ManualCarousel = ({ children }) => {
   };
 
   const goToIndex = (index) => {
+    // Check if not already animating, prevent mess animation
     if (!isAnimating && index !== currentIndex) {
       setDirection(index > currentIndex ? 'right' : 'left');
       setCurrentIndex(index);
@@ -49,6 +55,7 @@ const ManualCarousel = ({ children }) => {
       />
     ));
   };
+
   
   // Render the carousel with the current slide based on currentIndex
   return (
@@ -75,6 +82,7 @@ const Calculator = () => {
   // gues details
   const [attendees, setAttendees] = useState("");
   const [originCity, setOriginCity] = useState("");
+  const [originCities, setOriginCities] = useState([]);
   const [guestInformation, setguestInformation] = useState([]); 
 
   const { setEmissionsData } = useEmissions();
@@ -90,8 +98,12 @@ const Calculator = () => {
   const colors = ["#F7DD72", "#FD9689", "#90E89F", "#BEA0E5", "#C9DDFF"]; //colourful
   const [availableColors, setAvailableColors] = useState([...colors]);
 
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadResult, setUploadResult] = useState(null);
+
+  //handle errors
+  const [error, setError] = useState('');
 
   // autocomplete suggestions city data
   const [suggestions, setSuggestions] = useState([]);
@@ -104,12 +116,17 @@ const Calculator = () => {
   // Using React Spring's useTransition to animate the preferred-city-list
   const transitions = useTransition(preferredCities, {
     from: { opacity: 0, transform: 'translate3d(0,-40%,0)' },
-  enter: { opacity: 1, transform: 'translate3d(0,0,0)' },
-  leave: { opacity: 0, transform: 'translate3d(-100%,0,0)' },
-  config: { duration: 500 }, // Duration of 500ms for each transition
-  keys: preferredCities.map((city) => city.name),
+    enter: { opacity: 1, transform: 'translate3d(0,0,0)' },
+    leave: { opacity: 0, transform: 'translate3d(-100%,0,0)' },
+    config: { duration: 500 }, // Duration of 500ms for each transition
+    keys: preferredCities.map((city) => city.name),
   });
 
+  //handle keyboard events for input origins
+  const [highlightedOriginIndex, setHighlightedOriginIndex] = useState(-1);
+
+
+  // Handle keyboard events for potential city list suggestions for slide 1
   const handleKeyDown = (e) => {
     if (e.keyCode === 40 && highlightedIndex < suggestions.length - 1) {
       // down arrow
@@ -120,6 +137,21 @@ const Calculator = () => {
     } else if (e.keyCode === 13 && highlightedIndex >= 0) {
       // enter key
       selectSuggestion(suggestions[highlightedIndex]);
+    }
+  };
+
+  // Handle keyboard events for origin city suggestions for slide 2
+  const handleOriginCityKeyDown = (e) => {
+    if (e.key === "ArrowDown" && highlightedOriginIndex < originCitySuggestions.length - 1) {
+      e.preventDefault();
+      setHighlightedOriginIndex(highlightedOriginIndex + 1);
+    } else if (e.key === "ArrowUp" && highlightedOriginIndex > 0) {
+      e.preventDefault();
+      setHighlightedOriginIndex(highlightedOriginIndex - 1);
+    } else if (e.key === "Enter" && highlightedOriginIndex >= 0) {
+      e.preventDefault();
+      selectOriginCity(originCitySuggestions[highlightedOriginIndex]);
+      setHighlightedOriginIndex(-1); // Reset after selection
     }
   };
 
@@ -162,22 +194,21 @@ const Calculator = () => {
   };
 
   const isCityValid = (cityName, countryName) => {
-    return cityData.some(city => 
+    return cityData.some(city =>
       city.city.toLowerCase() === cityName.toLowerCase() &&
       city.country.toLowerCase() === countryName.toLowerCase()
     );
   };
-  
 
   const handleAddGuestInfo = () => {
     const numAttendees = parseInt(attendees);
     if (isNaN(numAttendees) || numAttendees <= 0) {
-      alert("Please enter a valid number of attendees greater than zero.");
+      setError("Please enter a valid number of attendees greater than zero.");
       return;
     }
     // Check if input fields are not empty
     if (!attendees || !originCity) {
-      alert('Please fill in all fields.');
+      setError('Please fill in all fields.');
       return;
     }
 
@@ -187,67 +218,67 @@ const Calculator = () => {
 
     const cityComponents = originCity.split(',');
     if (cityComponents.length < 2) {
-      alert('Please make sure to enter both city and country in the format "Country, City".');
+      setError('Please make sure to enter both city and country in the format "City, Country".');
       return;
     }
-  
+
     const countryName = cityComponents[0].trim();
     const cityName = cityComponents[1].trim();
-  
+
     if (!isCityValid(countryName, cityName)) {
-      alert('The origin city and country combination is not valid. Please select a valid city and country from the suggestions.');
+      setError('The origin is not valid. Please check the spelling or select a valid city and country from the suggestions.');
       return;
     }
-  
+    setError('');
     // Find if the origin city already exists in the results
-  const existingCityIndex = uploadResult && uploadResult.results ? uploadResult.results.data.findIndex(row => row.city === originCity.split(',')[0]) : -1;
-  
-  if (existingCityIndex !== -1) {
-    // If the city exists, update the number of attendees
-    const updatedData = uploadResult.results.data.map((row, index) => {
-      if (index === existingCityIndex) {
-        // Update the number of attendees for the existing city
-        return {
-          ...row,
-          number: parseInt(row.number) + parseInt(attendees)
-        };
-      } else {
-        return row;
-      }
-    });
+    const existingCityIndex = uploadResult && uploadResult.results ? uploadResult.results.data.findIndex(row => row.city === originCity.split(',')[0]) : -1;
 
-    setUploadResult((prevUploadResult) => ({
-      ...prevUploadResult,
-      results: {
-        ...prevUploadResult.results,
-        data: updatedData
-      }
-    }));
-  } else {
-    // If the city doesn't exist, add a new entry
-    const newEntry = {
-      city: originCity.split(',')[0], 
-      country: originCity.split(',')[1] || '', 
-      number: attendees
-    };
+    if (existingCityIndex !== -1) {
+      // If the city exists, update the number of attendees
+      const updatedData = uploadResult.results.data.map((row, index) => {
+        if (index === existingCityIndex) {
+          // Update the number of attendees for the existing city
+          return {
+            ...row,
+            number: parseInt(row.number) + parseInt(attendees)
+          };
+        } else {
+          return row;
+        }
+      });
 
-    // Check if uploadResult.results is not null before trying to spread it
-    const updatedData = uploadResult && uploadResult.results ? [...uploadResult.results.data, newEntry] : [newEntry];
+      setUploadResult((prevUploadResult) => ({
+        ...prevUploadResult,
+        results: {
+          ...prevUploadResult.results,
+          data: updatedData
+        }
+      }));
+    } else {
+      // If the city doesn't exist, add a new entry
+      const newEntry = {
+        city: originCity.split(',')[0],
+        country: originCity.split(',')[1] || '',
+        number: attendees
+      };
 
-    setUploadResult((prevUploadResult) => ({
-      ...prevUploadResult,
-      results: {
-        ...prevUploadResult.results,
-        data: updatedData
-      }
-    }));
-  }
-  
-  // Clear the input fields
-  setAttendees('');
-  setOriginCity('');
+      // Check if uploadResult.results is not null before trying to spread it
+      const updatedData = uploadResult && uploadResult.results ? [...uploadResult.results.data, newEntry] : [newEntry];
+
+      setUploadResult((prevUploadResult) => ({
+        ...prevUploadResult,
+        results: {
+          ...prevUploadResult.results,
+          data: updatedData
+        }
+      }));
+    }
+
+    // Clear the input fields
+    setAttendees('');
+    setOriginCity('');
   };
-  
+
   const handleRemoveCity = (indexToRemove) => {
     const cityToRemove = preferredCities[indexToRemove];
     // Add the color back to the available colors
@@ -288,119 +319,223 @@ const Calculator = () => {
     setCityInput("");
   };
 
-  // Handler for file upload
-  const handleFileUpload = (event) => {
+  // Handler for file input change for uploading CSV data
+  const handleFileChange = (event) => {
     const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const formData = new FormData();
+      formData.append("csv_file", file);
 
-    if (!file) {
-      // TODO: PLEASE CHANGE ALERTS TO BUILT-IN WEBSITE TEXT!
-      alert("Please select a file first!");
+      fetch("http://localhost:8000/api/upload-csv/", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Upload success:", data);
+          mergeUploadResults(data);
+          updateGuestInformationCSV(data)
+        })
+        .catch((error) => {
+          console.error("Upload error:", error);
+        });
+    }
+  };
+
+
+  // Handler for file upload and result update
+  const handleFileUpload = () => {
+    if (!selectedFile) {
+      setError("Please select a file first!");
       return;
     }
 
-    setSelectedFile(file);
-
+    if (!selectedFile.name.endsWith('.csv')) {
+      setError("Please upload a file in CSV format.");
+      return;
+  }
+    setError('');
     const formData = new FormData();
-    formData.append("csv_file", file);
+    formData.append("csv_file", selectedFile);
 
     fetch("http://localhost:8000/api/upload-csv/", {
       method: "POST",
       body: formData,
     })
+      
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        setUploadResult(data);
+        mergeUploadResults(data);
         updateGuestInformationCSV(data)
+        setError('');
       })
       .catch((error) => {
         console.error("Error:", error);
+        setError("Error:", error);
       });
+      
   };
 
 
-  //this is where we will call to backend to get the emissions algo stuff
-  const handleCalculateEmissions = async () => {
-    // toggling loading cursor to indicate a brief wait period
-    document.body.classList.add('loading-cursor')
+  // Helper function to merge upload results with existing data
+  const mergeUploadResults = (newData) => {
+    if (!uploadResult || !uploadResult.results) {
+      setUploadResult(newData);
+    } else {
+      const existingData = uploadResult.results.data;
+      const newDataMap = new Map(newData.results.data.map(item => [item.city + ',' + item.country, item]));
 
-    console.log("Calculate Button Clicked")
-    // these are the preferred cities that'll be passed into backend
-    const formattedPreferredCities = preferredCities.map(city => city.name)
-    // these are guest details that'll be passed into backend
-    const formattedguestInformation = guestInformation.map(city => [city.name, city.attendees])
-
-
-    const endpoint = 'http://localhost:8000/calculate-emissions/'
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          destinations: formattedPreferredCities,
-          origins: formattedguestInformation,
-        }),
+      const mergedData = existingData.map(item => {
+        const key = item.city + ',' + item.country;
+        if (newDataMap.has(key)) {
+          const newItem = newDataMap.get(key);
+          newItem.number = parseInt(item.number) + parseInt(newItem.number);
+          newDataMap.delete(key);
+          return newItem;
+        }
+        return item;
       });
-  
-      // error with connection/parsing, http based
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-  
-      const results = await response.json();
-      if (results) {
-        console.log("Emissions Calculation Results:", results);
-        // on completion of the calculation, scroll into results section
-        document.getElementById('results').scrollIntoView({ behavior: 'smooth' })
-        setEmissionsData(results.total_emissions);
-        // remove loading cursor, indicate completion
-        document.body.classList.remove('loading-cursor');
-      }
 
-    } catch (error) {
-      // reset cursor for error
-      document.body.classList.remove('loading-cursor');
-      // TODO: make this an built-in website text message
-      console.error("Failed to calculate emissions:", error);
+      newDataMap.forEach(value => mergedData.push(value));
+
+      setUploadResult(prev => ({
+        ...prev,
+        results: {
+          ...prev.results,
+          data: mergedData
+        }
+      }));
     }
   };
 
 
+  const UploadResults = ({ uploadResult }) => {
+    if (!uploadResult) return null;
+
+    return (
+      <div className="results-container">
+        <p>{uploadResult.message}</p>
+        {uploadResult.errors && (
+          <div>
+            <h4>Errors:</h4>
+            {uploadResult.errors.map((error, index) => (
+              <div key={index} className="error">{error}</div>
+            ))}
+          </div>
+        )}
+        {uploadResult.results && (
+          <div>
+            <h4>Results:</h4>
+            <div className="data-container">
+              {uploadResult.results.data.map((row, index) => (
+                <div key={index} className="data-row">
+                  <span>{row.country}</span>
+                  <span>{row.city}</span>
+                  <span>{row.number}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+    //this is where we will call to backend to get the emissions algo stuff
+    const handleCalculateEmissions = async () => {
+      // toggling loading cursor to indicate a brief wait period
+      document.body.classList.add('loading-cursor')
+  
+      console.log("Calculate Button Clicked")
+      // these are the preferred cities that'll be passed into backend
+      const formattedPreferredCities = preferredCities.map(city => city.name)
+      // these are guest details that'll be passed into backend
+      const formattedguestInformation = guestInformation.map(city => [city.name, city.attendees])
+  
+  
+      const endpoint = 'http://localhost:8000/calculate-emissions/'
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            destinations: formattedPreferredCities,
+            origins: formattedguestInformation,
+          }),
+        });
+    
+        // error with connection/parsing, http based
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
+        const results = await response.json();
+        if (results) {
+          console.log("Emissions Calculation Results:", results);
+          // on completion of the calculation, scroll into results section
+          document.getElementById('results').scrollIntoView({ behavior: 'smooth' })
+          setEmissionsData(results.total_emissions);
+          // remove loading cursor, indicate completion
+          document.body.classList.remove('loading-cursor');
+        }
+  
+      } catch (error) {
+        // reset cursor for error
+        document.body.classList.remove('loading-cursor');
+        // TODO: make this an built-in website text message
+        console.error("Failed to calculate emissions:", error);
+      }
+    };
+  
+  // Handler for changing origin city input
   const handleOriginCityChange = (e) => {
     const input = e.target.value;
     setOriginCity(input);
     if (input.length > 2) {
-        const filteredSuggestions = cityData.filter(city =>
-            city.city.toLowerCase().startsWith(input.toLowerCase())
-        ).slice(0, 5);
-        setOriginCitySuggestions(filteredSuggestions);
+      const filteredSuggestions = cityData.filter(city =>
+        city.city.toLowerCase().startsWith(input.toLowerCase())
+      ).slice(0, 5);
+      setOriginCitySuggestions(filteredSuggestions);
     } else {
-        setOriginCitySuggestions([]);
+      setOriginCitySuggestions([]);
     }
-};
 
-// format csv data results as required to be transferred into setGuestInformation
-const updateGuestInformationCSV = (csvData) => {
-  const newGuestInformation = csvData.results.data.map(row => ({
-    name: `${row.city}, ${row.country}`,
-    attendees: parseInt(row.number, 10)
-  }));
-  setguestInformation(currentGuestInfo => [...currentGuestInfo, ...newGuestInformation]);
-}
-// set city name and number of attendees to guestInformation array
-const setGuestInformation = (city) => {
-  const numAttendees = parseInt(attendees)
-  setOriginCity(`${city.city}, ${city.country}`);
-  const newOriginCity = {
-    name: `${city.city}, ${city.country}`,
-    attendees: numAttendees
   };
-  setguestInformation([...guestInformation, newOriginCity]);
-  setOriginCitySuggestions([]);
-};
 
+  // format csv data results as required to be transferred into setGuestInformation
+  const updateGuestInformationCSV = (csvData) => {
+    const newGuestInformation = csvData.results.data.map(row => ({
+      name: `${row.city}, ${row.country}`,
+      attendees: parseInt(row.number, 10)
+    }));
+    setguestInformation(currentGuestInfo => [...currentGuestInfo, ...newGuestInformation]);
+  }
+  // set city name and number of attendees to guestInformation array
+  const setGuestInformation = (city) => {
+    const numAttendees = parseInt(attendees)
+    setOriginCity(`${city.city}, ${city.country}`);
+    const newOriginCity = {
+      name: `${city.city}, ${city.country}`,
+      attendees: numAttendees
+    };
+    setguestInformation([...guestInformation, newOriginCity]);
+    setOriginCitySuggestions([]);
+  };
+
+  const selectOriginCity = (city) => {
+    setGuestInformation(city)
+    setOriginCity(`${city.city}, ${city.country}`);
+    setOriginCities([...originCities, { name: `${city.city}, ${city.country}`, color: "#FFFFFF" }]);
+    setOriginCitySuggestions([]);
+    setHighlightedOriginIndex(-1);
+  };
+
+const removeOriginCity = (indexToRemove) => {
+  setOriginCities(originCities.filter((_, index) => index !== indexToRemove));
+};
 
   // Calculator component code using ManualCarousel
   return (
@@ -413,7 +548,7 @@ const setGuestInformation = (city) => {
             <p>Input up to 5 preferred cities for hosting your conference!</p>
           </div>
           <div className="notification-container">
-          {fullListNotification && (<p className="list-notification">{fullListNotification}</p>)}
+            {fullListNotification && (<p className="list-notification">{fullListNotification}</p>)}
             <input
               type="text"
               placeholder={cityPlaceholder}
@@ -422,6 +557,8 @@ const setGuestInformation = (city) => {
               onKeyDown={handleKeyDown}
               className="city-input"
             />
+            {/* <button onClick={handleAddCity} className="add-city-button">Add</button> */}
+
             {/* Autocomplete Suggestions */}
             {cityInput.length > 0 && suggestions.length > 0 && (
             <ul className="autocomplete-suggestions-one">
@@ -458,55 +595,59 @@ const setGuestInformation = (city) => {
           </div>
         </div>
 
+
         {/* Slide 2 */}
         <div className="slide-content">
           <div className="calculator-title">
             <h1>Your Attendees</h1>
             <p>Let us know who's joining and from where!</p>
           </div>
-          <div className="content-container">  
-          <div className="input-container"> 
-          <div className="input-group">
-            <input type="number" className="input-attendees" value={attendees} onChange={(e) => setAttendees(e.target.value)} placeholder=" # "/>
-            <input type="text" className="input-origin" value={originCity} onChange={handleOriginCityChange} placeholder="Origin" />
-            {originCity.length > 0 && originCitySuggestions.length > 0 && (
-            <ul className="autocomplete-suggestions-two">
-            {originCitySuggestions.map((city, index) => (
-      <li key={index} onClick={() => setGuestInformation(city)}>
-        {city.city}, {city.country}
-      </li>
-    ))}
-  </ul>
-)}
-            <button className="addButton" onClick={handleAddGuestInfo}> Add </button>
-          </div>
-          {/* Your content for slide 2 */}
-          <input id="browse-csv-button" type="file" accept=".csv" style={{display: 'none'}} onChange={handleFileUpload} />
-          <p className="data-import-description">Already have data? Please upload it below!</p>
-          <div className="button-group">
-          <button onClick={() => document.getElementById('browse-csv-button').click()} className="importButton">Import Data CSV</button>
-
-          {/* why is this ID upload-csv-button????????? */}
-          <button id="Upload-CSV-button" className="calculateButton" onClick={handleCalculateEmissions}>Calculate</button> 
-          </div>
-          </div>
-          <div className="results-container">
-          {uploadResult && uploadResult.results && (
-            <div>
-          {uploadResult.results.data.map((row, index) => {
-            // Determine the color for this row. Wrap the index if it exceeds the length of the colors array.
-            const rowColor = colors[index % colors.length];
-            return (
-            <div key={index} className="data-row" style={{backgroundColor: rowColor}}>
-              <span>{row.country}</span>
-              <span>{row.city}</span>
-              <span>{row.number}</span>
+          <p className="error-message">{error}</p>
+          <div className="content-container">
+            <div className="input-container">
+              <div className="input-group">
+                <input type="number" className="input-attendees" value={attendees} onChange={(e) => setAttendees(e.target.value)} placeholder=" # " />
+                <input type="text" className="input-origin" value={originCity} onChange={handleOriginCityChange} onKeyDown={handleOriginCityKeyDown} placeholder="Origin" />
+                {originCity.length > 0 && originCitySuggestions.length > 0 && (
+                  <ul className="autocomplete-suggestions-two">
+                    {originCitySuggestions.map((city, index) => (
+                      <li
+                        key={index}
+                        onClick={() => selectOriginCity(city)}
+                        className={highlightedOriginIndex === index ? "highlighted" : ""}
+                      >
+                        {city.city}, {city.country}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <button className="addButton" onClick={handleAddGuestInfo}> Add </button>
+              </div>
+              {/* Your content for slide 2 */}
+              <input id="browse-csv-button" type="file" accept=".csv" style={{ display: 'none' }} onChange={handleFileChange} />
+              <p className="data-import-description">Got some data? Please upload it below.</p>
+              <div className="button-group">
+                <button onClick={() => document.getElementById('browse-csv-button').click()} className="importButton">Import Data</button>
+                <button id="Upload-CSV-button" className="calculateButton" onClick={handleCalculateEmissions}>Calculate</button>
+              </div>
             </div>
-          );
-        })}
-    </div>
-  )}
-</div>
+            <div className="results-container">
+              {uploadResult && uploadResult.results && (
+                <div>
+                  {uploadResult.results.data.map((row, index) => {
+                    // Determine the color for this row. Wrap the index if it exceeds the length of the colors array.
+                    const rowColor = colors[index % colors.length];
+                    return (
+                      <div key={index} className="data-row" style={{ backgroundColor: rowColor }}>
+                        <span>{row.country}</span>
+                        <span>{row.city}</span>
+                        <span>{row.number}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </ManualCarousel>

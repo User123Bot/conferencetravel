@@ -42,3 +42,4 @@ def test_csv_city_counts(client, csv_file, expected_city_counts):
         assert (
             cities_in_response.get(city, 0) == expected_count
         ), f"{city} count mismatch in response for {csv_file}"
+
