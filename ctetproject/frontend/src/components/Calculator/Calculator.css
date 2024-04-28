@@ -13,7 +13,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-bottom: 80px;
+  padding-bottom: 0px;
 }
 
 .calculator-title h1 {
@@ -29,7 +29,19 @@
 }
 
 .calculator-title p {
-  margin-bottom: 50px;
+  margin-bottom: 20px;
+  /* Space between title and carousel */
+  font-size: 2em;
+  /* Increase font size */
+  font-weight: bolder;
+  text-align: center;
+  width: 100%;
+  max-width: 800px;
+  /* Maximum width of the title, adjust as necessary */
+}
+
+.alarm p {
+  margin-bottom: 20px;
   /* Space between title and carousel */
   font-size: 2em;
   /* Increase font size */
@@ -80,7 +92,7 @@ input[type="text"] {
   background-color: #3b3e54;
   color: white;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 1.8vh;
   cursor: pointer;
   width: calc(50% - 5px);
 }
@@ -88,7 +100,7 @@ input[type="text"] {
 .addButton:hover,
 .importButton:hover,
 .calculateButton:hover {
-  background-color: #A37A74;
+  background-color: #757472;
 }
 
 .button-group {
@@ -98,19 +110,7 @@ input[type="text"] {
   margin-left: 20px;
   align-self: flex-start;
   align-items: left;
-  /* Align buttons vertically */
-  align-self: flex-start;
   justify-content: flex-start;
-}
-
-
-.importButton,
-.calculateButton {
-  font-size: 0.875rem;
-  /* Font size */
-  flex: 1;
-  flex-wrap: wrap;
-  width: auto;
 }
 
 .data-import-description {
@@ -143,7 +143,7 @@ input[type="text"] {
 .nav-dots {
   text-align: center;
   position: absolute;
-  bottom: 60px;
+  bottom: 40px;
   left: 0;
   right: 0;
 }
@@ -223,52 +223,48 @@ input[type="text"] {
 }
 
 .input-container {
-  flex: 2;
+  flex: 1;
   margin-right: 20px;
-  flex-basis: 40vw;
-  max-width: 40vw;
+  flex-basis: 40%; 
+  max-width: 40%;
+  margin-bottom: 20px; 
 }
 
 .results-container {
-  flex: 3;
+  flex: 1;
   overflow-y: auto;
   border-radius: 10px;
-  flex-basis: 60vw;
-  max-width: 60vw;
-  margin-top: 0%;
-  margin-right: 1.5rem;
-  margin-left: 0.5rem;
+  flex-basis: 60%; 
+  margin: 0 10px; 
   background-color: transparent;
   display: flex;
   flex-direction: column;
-  max-height: 200px;
-  /* Adjust the height to your preference */
-  overflow-y: auto;
-  /* Make it scrollable */
+  max-height: 200px; 
+  overflow-y: auto; 
 }
-
 
 
 .data-row {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1.2fr 2fr 0.8fr; /* Adjust the fr units here */
   align-items: center;
   gap: 5px;
-  flex-wrap: wrap;
-  color: #3b3e54;
-  /* White text color */
   padding: 10px 20px;
   border-radius: 10px;
-  /* Rounded corners for each row */
   margin-bottom: 10px;
-  /* Space between rows */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Optional: Adds shadow for depth */
 }
 
-.data-row:last-child {
-  margin-bottom: 0;
-  /* No margin for the last row */
+.data-row > span:first-child {
+  text-align: left;
+}
+
+.data-row > span:nth-child(2) {
+  text-align: center;
+}
+
+.data-row > span:last-child {
+  text-align: right;
 }
 
 /* Add styles for the scrollbar for better visual appearance */
