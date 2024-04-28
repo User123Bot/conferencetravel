@@ -58,7 +58,7 @@
   z-index: 1;
   margin: 0;
   margin-top: -15%;
-  font-size: 6em;
+  font-size: 6vw;
   font-style: italic;
   font-weight: bolder;
   color: #FEFCEE;
@@ -71,41 +71,27 @@
 .home-section h2 {
   z-index: 1;
   margin: 0.5em 0;
-  font-size: 2em;
+  font-size: 2vw;
   font-style: italic;
   font-weight: lighter;
   color: #FEFCEE;
   padding-left: 5%; /* Push content towards the left */
   padding-top: 1%;
-  max-width: 30%;
+  max-width: 50%;
   animation: titleFromLeft 1.5s;
 }
 
-.home-section p {
+/* .home-section p {
+  position: absolute;
+  left: 50%; 
+  transform: translateX(-50%);
   text-align: center;
   z-index: 1;
-  font-size: 1em;
+  font-size: 1.5vw;
   font-weight: lighter;
   color: #FEFCEE;
-  position: absolute;
-  bottom: 10px;
+  bottom: 2vh;
   font-style: italic;
-  left: 50%;
   padding-bottom: 5%;
-  transform: translateX(-50%);
   animation: textEaseIn 3s;
-}
-
-/* Responsive behavior for smaller screens */
-@media (max-width: 768px) {
-  .home-section {
-    align-items: center; /* Center alignment on smaller screens */
-    text-align: center;
-  }
-
-  .home-section h1,
-  .home-section h2 {
-    padding-left: 0;
-    max-width: 100%;
-  }
-}
+} */
