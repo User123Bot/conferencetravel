@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-9#8sty=anp8q^26-!da*9p@o+2rdi8h710iw-*^(i=jl2rl_%&"
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY", "OxaV2yCQ51ZteuIAbgcmL8sT1Wts14NyX0KbyD6U5IWLAzqcSp0"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -39,9 +43,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -68,6 +74,15 @@ TEMPLATES = [
         },
     },
 ]
+
+# Rest framework settings (if you're using Django Rest Framework)
+REST_FRAMEWORK = {
+    "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.JSONParser",
+        "rest_framework.parsers.FormParser",
+        "rest_framework.parsers.MultiPartParser",
+    ],
+}
 
 WSGI_APPLICATION = "ctetproject.wsgi.application"
 
@@ -130,3 +145,38 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # At the bottom of your settings.py file, add the STATIC_ROOT setting
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+
+# Make sure to use CSRF_COOKIE_SECURE = True in production
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_HTTPONLY = (
+    True  # HTTPOnly flag on CSRF cookie, meaning it's not accessible by JavaScript
+)
+SESSION_COOKIE_SAMESITE = "None" if not DEBUG else "Lax"
+
+# Add the following lines to set up Django CORS headers
+CORS_ALLOW_ALL_ORIGINS = True  # For development only, be cautious in production
+CORS_ALLOW_CREDENTIALS = True  # To accept cookies via AJAX
+
+MEDIA_URL = "/media/"  # Base public URL of media files
+MEDIA_ROOT = os.path.join(
+    BASE_DIR, "media"
+)  # Directory where uploaded files will be stored
+
+# Logging configuration
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "": {  # '' defines the root logger
+            "handlers": ["console"],
+            "level": "INFO",  # Change to DEBUG for more detailed logs
+            "propagate": True,
+        },
+    },
+}

@@ -1,3 +1,9 @@
+## Git Etiquette Document:
+
+Please read [this](https://drive.google.com/file/d/1FfMkuEYoU2G2ClHKmc22wT3o7GNvPLP3/view?usp=sharing) before working on the project.
+
+---
+
 ### Step 1: Clone the Repository
 
 First, clone the project repository from the command line:

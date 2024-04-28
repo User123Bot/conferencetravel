@@ -1,0 +1,149 @@
+/* Results.css */
+.results-section {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; /* Adjust space distribution */
+    min-height: 100vh;
+    background-color: #FEFCEE;
+    color: #3b3e54;
+  }
+    
+  .results-content {
+    /* flex: 0 0 50%; Fixed basis, no shrink or grow */
+    padding: 2vw;
+    max-width: 50%; /* Limit the max width to 50% */
+    margin-left: 5vw;
+    margin-top: -10vh;
+  }
+  
+  .results-title {
+    font-size: 2.7rem;
+  }
+
+  .results-body {
+    font-size: clamp(1.5rem, 2.5vw, 1.8rem);
+  }
+
+  /* Results.css */
+.city-tiles {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Aligns tiles to the left */
+  font-size: 1.3rem;
+}
+
+.city-tile {
+  display: grid;
+  grid-template-columns: 5vh 30vh 30vh; /* Three columns: index, city name, and emissions */
+  text-align: center;
+  gap: 10px; /* Adjust gap to your liking */
+  padding: 10px;
+  margin-bottom: 5px; /* Space between rows */
+}
+
+.city-tile > * { 
+  padding: 10px; /* Padding for each cell */
+  text-align: center;
+  background-color: #3b3e54; /* White background for each cell */
+  border: 1px solid #e0e0e0; /* Border to distinguish cells */
+  border-radius: 5px; /* Rounded corners for each cell */
+}
+
+.city-tile-index {
+  text-align: center; /* Center the index number */
+  color: white;
+}
+
+.city-tile-name {
+  font-weight: bold;
+}
+
+.city-tile-emissions {
+  text-align: center; /* Center the emissions text */
+  background-color: #e0e0e0; /* Different background to distinguish this cell */
+}
+
+
+  
+#map-container {
+  margin-left: auto;
+  margin-right: auto;
+  height: 70vh; /* Adjust height as necessary */
+  width: 40vw; /* Adjust width as necessary, using viewport width */ 
+}
+
+.map-marker {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  text-align: center;
+}
+
+
+.marker-label {
+  visibility: hidden;
+  width: 5vw;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 1vw;
+  padding: 0.1vw 0;
+
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -2.5vw; 
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.map-marker:hover .marker-label {
+    visibility: visible;
+    opacity: 1;
+}
+  
+
+  /* need to look into whether this is allowed */
+  .mapboxgl-ctrl-logo {
+    display: none !important;
+}
+  
+
+@media (max-width: 768px) {
+  .results-section {
+      flex-direction: column; /* Stack items vertically */
+      align-items: center; /* Center items when stacked */
+      padding: 10px;
+  }
+
+  .city-tiles div {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .results-content {
+      max-width: 90%; /* Allow content to take more width on smaller screens */
+      margin: 0 0 20px 0; /* Adjust margin to add space below the content */
+      padding: 10px; /* Adjust padding for smaller screens */
+      order: 1; /* Ensure content is displayed above the map */
+  }
+
+  #map-container {
+      width: 80vw; /* Adjust map width on smaller screens */
+      height: 50vh; /* Adjust map height on smaller screens */
+      margin-top: 20px; /* Add some space above the map */
+      order: 2; /* Ensure map is displayed below the content */
+  }
+
+  .results-title, .results-body {
+      font-size: 1.5em; /* Adjust font size for smaller screens */
+  }
+
+  .marker-label {
+      width: 100px; /* Adjust label width for smaller screens */
+      margin-left: -50px; /* Adjust label position */
+  }
+}

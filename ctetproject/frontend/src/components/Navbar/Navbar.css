@@ -1,0 +1,60 @@
+/* Navbar.css */
+
+/* Animate the navbar to come in from the top */
+@keyframes navEaseIn {
+  from {
+    opacity: 0%;
+    /* transform: translateY(-200%); */
+  }
+  to {
+    opacity: 100%;
+    /* transform: translateY(0%); */
+  }
+
+}
+
+.navbar {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky; 
+  top: 0;
+  background-color: #3b3e54;
+  padding: 20px 30px; /* Add horizontal padding for spacing */
+  z-index: 1; /* Ensure navbar stays on top of other elements */
+  display: flex;
+  justify-content: flex-end;  /*Aligns children to the end (right)*/
+  animation: navEaseIn 2.5s;
+}
+
+.logo {
+  margin-right: auto; /* Pushes the logo to the left */
+}
+
+.divider {
+  cursor: default;
+  margin-left: 30px;
+  text-decoration: none;
+  font-size: 1.5em;
+  font-weight: lighter;
+  color: #FEFCEE;
+}
+
+.divider:hover {
+  cursor: default;
+}
+
+
+.navbar span:not(.divider) {
+  margin-left: 30px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #FEFCEE;
+  font-size: 1.5em;
+  font-weight: lighter;
+  /* Add other styles like padding, font size etc. as needed */
+}
+
+/* Optionally, you can add some hover effect to your nav items */
+.navbar span:not(.divider):hover {
+  /* text-decoration: underline; */
+  color: grey;
+}

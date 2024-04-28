@@ -26,16 +26,18 @@ Actual python package for the project. It is where the settings and main configu
 * `asgi.py`: Provides an entry point for ASGI-compatible web servers to serve CTET, useful for asynchronous functionality. Doesn't concern the project too much at this stage.
 * `settings.py`: Contains all the configuration for the project, including database settings, security keys, and applications config. Will be used as we progress.
 * `urls.py`: Defines the URL declarations for the project; this where we "wire" our `views` to URLs. Sort of like the table of contents for the website.
+* `views.py`: Main python file to handle the backend logic of the website. For example, this is used to handle CSV parser upon user uploads.
 * `wsgi.py`: Provides an entry point for WSGI-compatible web servers to serve our project, essentially used for deployment.
 
-As you can see, `CTET/` is an important directory but we will not utilise it much - other than for config.
 
 `frontend/`
 
 This is the frontend app for our project, it uses ReactJS. This is where we will develop frontend designs and features specific to our website.
 
 * `src`: Contains the source code for our frontend react application.
+
   * `App.js`: The main React component that serves as the entry point for our React interface.
+  * `Componenets/`: This directory contains all the different components that will be 'glued' together in the react frontend. This a key feature in react as it is a component-based architecture system.
   * `App.test.js`: Contains tests for `App.js` component.
   * `index.js`: The JS entry point that renders the react app using `ReactDOM`.
   * Other: `reportWebVitals.js`, `setupTests.js`, for logging and setting testing envrionments.
@@ -48,4 +50,8 @@ Developers, please view the `dev_installation.md` for instructions.
 
 ## Tech-Stack Introduction
 
-## Setup Guide
+Full Tech-Stack research and justification document can be found [here](https://docs.google.com/document/d/1UnLRnXmW2PSrgQ18GIVt_LTlBGbwnZAgDI9Yb7_5MJA/edit).
+
+The Conference Travel Emissions Tool is built upon a Django rest framework which utilises ReactJS for frontend development. 
+
+Combining Django on the backend with React on the frontend offers a cohesive development environment. This synergy enables rapid development, scalability, and enhanced user experience. Django's backend capabilities seamlessly integrate with React's component-based architecture, ensuring efficient communication between the server and client sides. With strong community support and extensive ecosystems, this tech stack accelerates development, fosters scalability, and ensures maintainability for the Conference Travel Emissions Tool. This Tech-Stack is highly suitabe for CTET's minimum viable project goals and will also assist in future extensions as we aim to implement the database. 

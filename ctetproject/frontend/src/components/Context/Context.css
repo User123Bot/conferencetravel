@@ -1,0 +1,28 @@
+/* Context.css */
+
+.context-section {
+    min-height: 100vh; /* vh is viewport height, so 100vh will fill the screen */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    background-color: #FEFCEE;
+}
+
+.context-section h1 {
+    text-align: center;
+    font-size: 4em;
+    max-width: 70%;
+    font-style: italic;
+    color: #3b3e54;
+    padding-bottom: 10px;
+}
+
+.context-section p {
+    text-align: center;
+    font-size: 2em;
+    max-width: 70%;
+    font-style: italic;
+    color: #3b3e54;
+}
