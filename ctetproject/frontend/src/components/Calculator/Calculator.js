@@ -512,37 +512,33 @@ const removeOriginCity = (indexToRemove) => {
       <ManualCarousel>
         {/* Slide 1 */}
         <div className="slide-content">
-          <div className="calculator-title">
-            <h1>Your Host Cities</h1>
-            <p>Input up to 5 preferred cities for hosting your conference!</p>
-          </div>
-          <div className="notification-container">
-            {fullListNotification && (<p className="list-notification">{fullListNotification}</p>)}
-            <input
-              type="text"
-              placeholder={cityPlaceholder}
-              value={cityInput}
-              onChange={handleCityInputChange}
-              onKeyDown={handleKeyDown}
-              className="city-input"
-            />
-            {/* <button onClick={handleAddCity} className="add-city-button">Add</button> */}
-
-            {/* Autocomplete Suggestions */}
-            {cityInput.length > 0 && suggestions.length > 0 && (
+        <div className="calculator-title">
+          <h1>Your Host Cities</h1>
+          <p>Input up to 5 preferred cities for hosting your conference!</p>
+        </div>
+        <div className="city-input-container"> 
+          <input
+            type="text"
+            placeholder={cityPlaceholder}
+            value={cityInput}
+            onChange={handleCityInputChange}
+            onKeyDown={handleKeyDown}
+            className="city-input"
+          />
+          {cityInput.length > 0 && suggestions.length > 0 && (
             <ul className="autocomplete-suggestions-one">
-            {suggestions.map((suggestion, index) => (
-            <li
-              key={index}
-              onClick={() => selectSuggestion(suggestion)}
-              className={highlightedIndex === index ? "highlighted" : ""}
-            >
-              {suggestion.city}, {suggestion.country}
-             </li>
-            ))}
+              {suggestions.map((suggestion, index) => (
+                <li
+                  key={index}
+                  onClick={() => selectSuggestion(suggestion)}
+                  className={highlightedIndex === index ? "highlighted" : ""}
+                >
+                  {suggestion.city}, {suggestion.country}
+                </li>
+              ))}
             </ul>
-              ) }
-          </div>
+          )}
+        </div>
 
           {/* Preferred Cities Display */}
           <div className="preferred-cities-display">
@@ -563,7 +559,6 @@ const removeOriginCity = (indexToRemove) => {
             ))}
           </div>
         </div>
-
 
         {/* Slide 2 */}
         <div className="slide-content">

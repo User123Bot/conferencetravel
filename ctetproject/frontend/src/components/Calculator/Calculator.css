@@ -411,18 +411,24 @@ input[type="text"] {
   z-index: 5;
 }
 
+.city-input-container {
+  position: relative;
+  display: inline-block;
+}
+
 .autocomplete-suggestions-one {
   list-style-type: none;
-  margin-top: 1rem;
+  margin-top: 10px; 
   padding-left: 0;
   position: absolute;
-  width: 100%;
+  left: -50%;
+  min-width: 200%; 
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   overflow: hidden;
-  border: 1px solid white;
-  overflow-y: auto;
-  z-index: 5;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 2;
 }
 
 .autocomplete-suggestions-one li,
