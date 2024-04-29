@@ -594,7 +594,10 @@ const removeOriginCity = (indexToRemove) => {
               </div>
               {/* Your content for slide 2 */}
               <input id="browse-csv-button" type="file" accept=".csv" style={{ display: 'none' }} onChange={handleFileChange} />
-              <p className="data-import-description">Got some data? Please upload it below.</p>
+              <p className="data-import-description">Got some data?
+              <a href={`${process.env.PUBLIC_URL}/template.csv`} download="template.csv">Download CSV template.</a>
+              Upload it below!
+              </p>
               <div className="button-group">
                 <button onClick={() => document.getElementById('browse-csv-button').click()} className="importButton">Import Data</button>
                 <button id="Upload-CSV-button" className="calculateButton" onClick={handleCalculateEmissions}>Calculate</button>
