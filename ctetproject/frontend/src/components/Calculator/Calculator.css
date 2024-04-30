@@ -90,11 +90,12 @@ input[type="text"] {
 .calculateButton {
   padding: 10px 20px;
   background-color: #3b3e54;
+  text-align: center;
   color: white;
   border-radius: 5px;
-  font-size: 1.8vh;
+  font-size: 1.9vh;
   cursor: pointer;
-  width: calc(50% - 5px);
+  width: 100%;
 }
 
 .addButton:hover,
@@ -108,8 +109,9 @@ input[type="text"] {
   gap: 10px;
   margin-bottom: 20px;
   margin-left: 20px;
+  margin-right: -20px;
   align-self: flex-start;
-  align-items: left;
+  align-items: center;
   justify-content: flex-start;
 }
 
@@ -169,8 +171,7 @@ input[type="text"] {
 
 .manual-carousel-container {
   position: relative;
-  width: 75%;
-  /* Adjust width as needed */
+  width: 80%;
   margin: auto;
   min-height: 100vh;
   overflow: hidden;
@@ -178,7 +179,6 @@ input[type="text"] {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  /* Adjust this to align items as needed */
 }
 
 /* Slides */
@@ -196,9 +196,6 @@ input[type="text"] {
   /* Background color */
   will-change: transform, opacity;
   flex-shrink: 0;
-  /* Prevents the slide from shrinking */
-  background-color: #FEFCEE;
-  /* Background color */
 }
 
 .slide-content {
@@ -495,13 +492,7 @@ input[type="text"] {
     display: none;
   }
 
-  .manual-carousel-container {
-    width: 100%;
-    /* Full width of the container */
-    overflow: hidden;
-  }
-
-  .input-group,
+  
   .input-attendees,
   .input-origin,
   .addButton,

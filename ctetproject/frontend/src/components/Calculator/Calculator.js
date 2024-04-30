@@ -570,7 +570,7 @@ const removeOriginCity = (indexToRemove) => {
           <div className="content-container">
             <div className="input-container">
               <div className="input-group">
-                <input type="number" className="input-attendees" value={attendees} onChange={(e) => setAttendees(e.target.value)} placeholder=" # " />
+                <input type="number" className="input-attendees" value={attendees} onChange={(e) => setAttendees(e.target.value)} placeholder=" # " min={1} />
                 <input type="text" className="input-origin" value={originCity} onChange={handleOriginCityChange} onKeyDown={handleOriginCityKeyDown} placeholder="Origin" />
                 {originCity.length > 0 && originCitySuggestions.length > 0 && (
                   <ul className="autocomplete-suggestions-two">
