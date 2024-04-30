@@ -221,33 +221,27 @@ input[type="text"] {
 
 .input-container {
   flex: 1;
-  margin-right: 20px;
-  flex-basis: 40%; 
+  margin-left: auto;
   max-width: 40%;
-  margin-bottom: 20px; 
 }
 
 .results-container {
-  flex: 1;
   overflow-y: auto;
-  border-radius: 10px;
-  flex-basis: 60%; 
-  margin: 0 10px; 
-  background-color: transparent;
-  display: flex;
   flex-direction: column;
-  max-height: 200px; 
-  overflow-y: auto; 
+  align-items: flex-end;
+  margin-right: 10%;
+  width: 35%;
+  max-height: 150px; 
+  margin-left: auto;
 }
 
 
 .data-row {
   display: grid;
-  grid-template-columns: 1.2fr 2fr 0.8fr; /* Adjust the fr units here */
+  grid-template-columns: 1fr 2fr 1fr; /* Adjust the fr units here */
   align-items: center;
-  gap: 5px;
   padding: 10px 20px;
-  border-radius: 10px;
+  border-radius: 30px;
   margin-bottom: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -550,11 +544,5 @@ input[type="text"] {
     /* Optionally, reduce the font size to save vertical space */
     padding: 5px;
     /* Adjust padding as needed for visual balance */
-  }
-
-  .results-container {
-    margin-left: auto;
-    max-width: 40vw;
-
   }
 }
