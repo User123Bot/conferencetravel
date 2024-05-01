@@ -66,11 +66,10 @@
 }
 
 .input-origin {
-  flex-grow: 1;
-  margin-right: 10px;
-  text-align: center;
+  text-align: left;
   border: #3b3e54;
-  max-width: calc(40% - 10px)
+  width: 60%;
+  margin-right: 5%;
 }
 
 
@@ -98,11 +97,17 @@ input[type="text"] {
   width: 100%;
 }
 
+.addButton {
+  width: 20% !important;
+
+}
+
 .addButton:hover,
 .importButton:hover,
 .calculateButton:hover {
   background-color: #757472;
 }
+
 
 .button-group {
   display: flex;

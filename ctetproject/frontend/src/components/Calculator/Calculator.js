@@ -92,14 +92,11 @@ const Calculator = () => {
   const [cityPlaceholder, setCityPlaceholder] = useState("Preferred Host City");
   const [fullListNotification, setFullListNotification] = useState("");
 
-
   // Ideal conf. location item colours.
   // const colors = ["#3B3E54", "#51546b", "#3B3E54", "#51546b", "#3B3E54"]; //greyscale
   const colors = ["#F7DD72", "#FD9689", "#90E89F", "#BEA0E5", "#C9DDFF"]; //colourful
   const [availableColors, setAvailableColors] = useState([...colors]);
 
-
-  const [selectedFile, setSelectedFile] = useState(null);
   const [uploadResult, setUploadResult] = useState(null);
 
   //handle errors
@@ -121,6 +118,14 @@ const Calculator = () => {
     config: { duration: 500 }, // Duration of 500ms for each transition
     keys: preferredCities.map((city) => city.name),
   });
+
+  const resultsTransitions = useTransition(uploadResult && uploadResult.results ? uploadResult.results.data : [], {
+    from: { opacity: 0, transform: 'translate3d(0,-40px,0)' },
+    enter: { opacity: 1, transform: 'translate3d(0,0,0)' },
+    leave: { opacity: 0, transform: 'translate3d(0,40px,0)' },
+    keys: item => item.city + item.country // Use a unique identifier for keys
+  });
+  
 
   //handle keyboard events for input origins
   const [highlightedOriginIndex, setHighlightedOriginIndex] = useState(-1);
@@ -257,21 +262,31 @@ const Calculator = () => {
     } else {
       // If the city doesn't exist, add a new entry
       const newEntry = {
-        city: originCity.split(',')[0],
-        country: originCity.split(',')[1] || '',
+        city: originCity.split(',')[0].trim(),
+        country: originCity.split(',')[1].trim() || '',
         number: attendees
       };
 
       // Check if uploadResult.results is not null before trying to spread it
       const updatedData = uploadResult && uploadResult.results ? [...uploadResult.results.data, newEntry] : [newEntry];
 
-      setUploadResult((prevUploadResult) => ({
-        ...prevUploadResult,
-        results: {
-          ...prevUploadResult.results,
-          data: updatedData
+      setUploadResult(prevState => {
+        const existingData = prevState.results.data;
+        const existingIndex = existingData.findIndex(item => item.city === newEntry.city && item.country === newEntry.country);
+    
+        if (existingIndex >= 0) {
+          existingData[existingIndex].number = parseInt(existingData[existingIndex].number) + parseInt(newEntry.number);
+          return { ...prevState };
+        } else {
+          return {
+            ...prevState,
+            results: {
+              ...prevState.results,
+              data: [...existingData, newEntry]
+            }
+          };
         }
-      }));
+      });
     }
 
     // Clear the input fields
@@ -323,7 +338,6 @@ const Calculator = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setSelectedFile(file);
       const formData = new FormData();
       formData.append("csv_file", file);
 
@@ -342,42 +356,6 @@ const Calculator = () => {
         });
     }
   };
-
-
-  // Handler for file upload and result update
-  const handleFileUpload = () => {
-    if (!selectedFile) {
-      setError("Please select a file first!");
-      return;
-    }
-
-    if (!selectedFile.name.endsWith('.csv')) {
-      setError("Please upload a file in CSV format.");
-      return;
-  }
-    setError('');
-    const formData = new FormData();
-    formData.append("csv_file", selectedFile);
-
-    fetch("http://localhost:8000/api/upload-csv/", {
-      method: "POST",
-      body: formData,
-    })
-      
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-        mergeUploadResults(data);
-        updateGuestInformationCSV(data)
-        setError('');
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        setError("Error:", error);
-      });
-      
-  };
-
 
   // Helper function to merge upload results with existing data
   const mergeUploadResults = (newData) => {
@@ -516,6 +494,9 @@ const removeOriginCity = (indexToRemove) => {
           <h1>Your Host Cities</h1>
           <p>Input up to 5 preferred cities for hosting your conference!</p>
         </div>
+        <div className="notification-container">
+        {fullListNotification && (<p className="list-notification">{fullListNotification}</p>)}
+        </div>
         <div className="city-input-container"> 
           <input
             type="text"
@@ -599,21 +580,20 @@ const removeOriginCity = (indexToRemove) => {
               </div>
             </div>
             <div className="results-container">
-              {uploadResult && uploadResult.results && (
-                <div>
-                  {uploadResult.results.data.map((row, index) => {
-                    // Determine the color for this row. Wrap the index if it exceeds the length of the colors array.
-                    const rowColor = colors[index % colors.length];
-                    return (
-                      <div key={index} className="data-row" style={{ backgroundColor: rowColor }}>
-                        <span>{row.country}</span>
-                        <span>{row.city}</span>
-                        <span>{row.number}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+              {resultsTransitions((style, item, transition, index) => (
+                <animated.div 
+                  style={{
+                    ...style, 
+                    backgroundColor: colors[index % colors.length]  // Cycle through colors array based on index
+                  }} 
+                  className="data-row" 
+                  key={item.city + item.country}
+                >
+                  <span>{item.country}</span>
+                  <span>{item.city}</span>
+                  <span>{item.number}</span>
+                </animated.div>
+              ))}
             </div>
           </div>
         </div>
