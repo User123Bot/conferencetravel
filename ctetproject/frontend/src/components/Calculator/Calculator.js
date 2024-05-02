@@ -552,7 +552,7 @@ const removeOriginCity = (indexToRemove) => {
             <div className="input-container">
               <div className="input-group">
                 <input type="number" className="input-attendees" value={attendees} onChange={(e) => setAttendees(e.target.value)} placeholder=" # " min={1} />
-                <input type="text" className="input-origin" value={originCity} onChange={handleOriginCityChange} onKeyDown={handleOriginCityKeyDown} placeholder="Origin" />
+                <input type="text" className="input-origin" value={originCity} onChange={handleOriginCityChange} onKeyDown={handleOriginCityKeyDown} placeholder="Enter Departure City" />
                 {originCity.length > 0 && originCitySuggestions.length > 0 && (
                   <ul className="autocomplete-suggestions-two">
                     {originCitySuggestions.map((city, index) => (
@@ -589,8 +589,7 @@ const removeOriginCity = (indexToRemove) => {
                   className="data-row" 
                   key={item.city + item.country}
                 >
-                  <span>{item.country}</span>
-                  <span>{item.city}</span>
+                  <span>{item.city}, {item.country}</span>
                   <span>{item.number}</span>
                 </animated.div>
               ))}

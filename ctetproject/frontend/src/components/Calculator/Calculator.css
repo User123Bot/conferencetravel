@@ -244,12 +244,13 @@ input[type="text"] {
 
 .data-row {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr; /* Adjust the fr units here */
+  grid-template-columns: 2fr 1fr; /* Adjust the fr units here */
   align-items: center;
   padding: 10px 20px;
   border-radius: 30px;
   margin-bottom: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 90%
 }
 
 .data-row > span:first-child {
