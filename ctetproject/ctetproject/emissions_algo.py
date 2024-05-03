@@ -10,12 +10,19 @@ location_cache: Dict[str, Tuple[float, float]] = {}
 
 
 def get_location(city: str) -> Tuple[float, float]:
+
+    if not isinstance(city, str):
+        raise TypeError("City name must be a string.")
+
     # check cache for the city
     if city in location_cache:
         return location_cache[city]
 
     # else use geocode, then add to cache
     location = geolocator.geocode(city)
+    if location is None:
+        # TODO - update to show a message within the webpage UI too
+        raise ValueError(f"Location {city} could not be found using GeoCode.")
     location_cache[city] = (location.latitude, location.longitude)
 
     return location_cache[city]
@@ -42,6 +49,8 @@ def calculate_single_trip_emissions(distance_km: float) -> float:
     # kg CO2e per passenger per km for long haul flights to/from UK
     conversion_factor_long_haul_international = 0.17580
 
+    if distance_km < 0:
+        raise ValueError("Distance cannot be negative.")
     # determine the conversion factor based on the flight distance
     if distance_km <= 600:
         # domestic flight
@@ -85,6 +94,9 @@ def calculate_emissions_for_multiple_routes(
 
     # creating dataFrame from collected data
     detailed_df = pd.DataFrame(routes_data)
+
+    if detailed_df.empty:
+        return detailed_df, pd.DataFrame()
 
     destination_coords = pd.DataFrame(
         [
