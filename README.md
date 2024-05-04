@@ -42,6 +42,15 @@ This is the frontend app for our project, it uses ReactJS. This is where we will
   * `index.js`: The JS entry point that renders the react app using `ReactDOM`.
   * Other: `reportWebVitals.js`, `setupTests.js`, for logging and setting testing envrionments.
 
+`testing/`
+
+* This folder has the automated and unit tests for this project. 
+* Inside this folder there is another folder called testingcsv which has all the csv's used for testing.
+* The pytest.ini file in the root folder allows the tests to be run under the command "pytest". This can be run in the root folder 'ctetproject' and the testing folder
+* The pytest.ini file is written so that files ending with "test.py" are the only ones done with the pytest command. Only unit tests are written in this format.
+* The automated tests that use Selenium do not have "test.py" at the end of their file name.
+* To run the automated tests you must navigate to the testing folder and run each test using the python command -- "python testing_automated_file.py"
+
 `ctetproject/manage.py`
 
 A command-line utility that allows us to interact with the Django project in various ways. For example, you can use it to run the development server, sync the database and for running tests.

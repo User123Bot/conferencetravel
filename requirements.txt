@@ -31,3 +31,4 @@ tzdata
 virtualenv
 pytest
 pytest-django
+webdriver_manager
