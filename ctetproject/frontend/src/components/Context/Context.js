@@ -11,7 +11,7 @@ function Context() {
         academic communities all over the world.
       </p>
       <p>
-        However, global conferences are inherently costly to the envrionment,
+        However, global conferences are inherently costly to the environment,
         with millions of miles of air travel accumulated each year.
       </p>
       <p>
