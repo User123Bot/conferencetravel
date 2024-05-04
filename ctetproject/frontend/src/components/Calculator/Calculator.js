@@ -91,6 +91,7 @@ const Calculator = () => {
   const [cityInput, setCityInput] = useState("");
   const [cityPlaceholder, setCityPlaceholder] = useState("Preferred Host City");
   const [fullListNotification, setFullListNotification] = useState("");
+  const [emptyListNotification, setEmptyListNotification] = useState("");
 
   // Ideal conf. location item colours.
   // const colors = ["#3B3E54", "#51546b", "#3B3E54", "#51546b", "#3B3E54"]; //greyscale
@@ -391,49 +392,62 @@ const Calculator = () => {
 
   //this is where we will call to backend to get the emissions algo stuff
   const handleCalculateEmissions = async () => {
-    // toggling loading cursor to indicate a brief wait period
-    document.body.classList.add('loading-cursor')
 
     console.log("Calculate Button Clicked")
-    // these are the preferred cities that'll be passed into backend
-    const formattedPreferredCities = preferredCities.map(city => city.name)
-    // these are guest details that'll be passed into backend
-    const formattedguestInformation = guestInformation.map(city => [city.name, city.attendees])
+
+    // handle no user input
+    if (preferredCities.length === 0 && guestInformation.length === 0) {
+      setEmptyListNotification("Please fill in preferred location(s) and guest information.")
+    } else if (preferredCities.length === 0) {
+      setEmptyListNotification("Please add preferred location(s) in the previous section.")
+    } else if(guestInformation.length === 0) {
+      setEmptyListNotification("Please add guest information.")
+    }
+    
+    else {
+      setEmptyListNotification("")
+      // toggling loading cursor to indicate a brief wait period
+      document.body.classList.add('loading-cursor')
+      // these are the preferred cities that'll be passed into backend
+      const formattedPreferredCities = preferredCities.map(city => city.name)
+      // these are guest details that'll be passed into backend
+      const formattedguestInformation = guestInformation.map(city => [city.name, city.attendees])
 
 
-    const endpoint = 'http://localhost:8000/calculate-emissions/'
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          destinations: formattedPreferredCities,
-          origins: formattedguestInformation,
-        }),
-      });
-  
-      // error with connection/parsing, http based
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-  
-      const results = await response.json();
-      if (results) {
-        console.log("Emissions Calculation Results:", results);
-        // on completion of the calculation, scroll into results section
-        document.getElementById('results').scrollIntoView({ behavior: 'smooth' })
-        setEmissionsData(results.total_emissions);
-        // remove loading cursor, indicate completion
+      const endpoint = 'http://localhost:8000/calculate-emissions/'
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            destinations: formattedPreferredCities,
+            origins: formattedguestInformation,
+          }),
+        });
+    
+        // error with connection/parsing, http based
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
+        const results = await response.json();
+        if (results) {
+          console.log("Emissions Calculation Results:", results);
+          // on completion of the calculation, scroll into results section
+          document.getElementById('results').scrollIntoView({ behavior: 'smooth' })
+          setEmissionsData(results.total_emissions);
+          // remove loading cursor, indicate completion
+          document.body.classList.remove('loading-cursor');
+        }
+
+      } catch (error) {
+        // reset cursor for error
         document.body.classList.remove('loading-cursor');
+        // TODO: make this an built-in website text message
+        console.error("Failed to calculate emissions:", error);
       }
-
-    } catch (error) {
-      // reset cursor for error
-      document.body.classList.remove('loading-cursor');
-      // TODO: make this an built-in website text message
-      console.error("Failed to calculate emissions:", error);
     }
   };
   
@@ -480,9 +494,23 @@ const Calculator = () => {
     setHighlightedOriginIndex(-1);
   };
 
-const removeOriginCity = (indexToRemove) => {
-  setOriginCities(originCities.filter((_, index) => index !== indexToRemove));
-};
+  const handleRemoveGuestInfo = (itemToRemove) => {
+    // Update the uploadResult to filter out the removed item
+    setUploadResult(prevState => ({
+      ...prevState,
+      results: {
+        ...prevState.results,
+        data: prevState.results.data.filter(item => item.city !== itemToRemove.city || item.country !== itemToRemove.country)
+      }
+    }));
+  
+    // Update the guestInformation to filter out the removed item
+    setguestInformation(prevGuestInfo =>
+      prevGuestInfo.filter(guest => `${guest.name}` !== `${itemToRemove.city}, ${itemToRemove.country}`)
+    );
+  };
+  
+  
 
   // Calculator component code using ManualCarousel
   return (
@@ -575,22 +603,29 @@ const removeOriginCity = (indexToRemove) => {
               Upload it below!
               </p>
               <div className="button-group">
-                <button onClick={() => document.getElementById('browse-csv-button').click()} className="importButton">Import Data</button>
+                <button onClick={() => document.getElementById('browse-csv-button').click()} className="importButton" title="">
+                  Import Data
+                  <div className="tooltip">CSV Format: Country, City, Number</div>
+                </button>
                 <button id="Upload-CSV-button" className="calculateButton" onClick={handleCalculateEmissions}>Calculate</button>
               </div>
+              {emptyListNotification && (<p className="list-notification">{emptyListNotification}</p>)}
             </div>
             <div className="results-container">
               {resultsTransitions((style, item, transition, index) => (
                 <animated.div 
                   style={{
                     ...style, 
-                    backgroundColor: colors[index % colors.length]  // Cycle through colors array based on index
+                    backgroundColor: colors[index % colors.length]  // cycle through colors array based on index
                   }} 
                   className="data-row" 
                   key={item.city + item.country}
                 >
                   <span>{item.city}, {item.country}</span>
                   <span>{item.number}</span>
+                  <button onClick={() => handleRemoveGuestInfo(item)} className="remove-guest-button">
+                    &times;
+                  </button>
                 </animated.div>
               ))}
             </div>
