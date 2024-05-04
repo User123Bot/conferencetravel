@@ -87,6 +87,14 @@ Developers, please view the `dev_installation.md` for instructions.
 
 ## Testing Framework & Execution
 
+**If you would like to execute all tests, including the automated tests which will require some time, please execute the following command from the root directory:**
+
+```
+./tests.sh
+```
+
+Otherwise, you can execute items compartmentally using the instructions below.
+
 ##### BACKEND
 
 ###### Standalone Emissions Algorithm Testing
@@ -172,7 +180,6 @@ Then execute the tests by running the following command:
 ```
 pytest
 ```
-
 
 ## Tech-Stack Introduction
 
