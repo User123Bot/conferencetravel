@@ -28,6 +28,7 @@ Actual python package for the project. It is where the settings and main configu
 * `urls.py`: Defines the URL declarations for the project; this where we "wire" our `views` to URLs. Sort of like the table of contents for the website.
 * `views.py`: Main python file to handle the backend logic of the website. For example, this is used to handle CSV parser upon user uploads.
 * `wsgi.py`: Provides an entry point for WSGI-compatible web servers to serve our project, essentially used for deployment.
+* `tests/`: This directory contains a collection of unit tests that are used to verify the accuracy and robustness of the emissions algorithm.
 
 `frontend/`
 
@@ -41,6 +42,16 @@ This is the frontend app for our project, it uses ReactJS. This is where we will
   * `index.js`: The JS entry point that renders the react app using `ReactDOM`.
   * Other: `reportWebVitals.js`, `setupTests.js`, for logging and setting testing envrionments.
 
+`testing/`
+
+* This folder has the automated and unit tests for this project.
+* Inside this folder there is another folder called testingcsv which has all the csv's used for testing.
+* The pytest.ini file in the root folder allows the tests to be run under the command "pytest". This can be run in the root folder 'ctetproject' and the testing folder
+* The pytest.ini file is written so that files ending with "test.py" are the only ones done with the pytest command. Only unit tests are written in this format.
+* The automated tests that use Selenium do not have "test.py" at the end of their file name.
+
+Please see the testing section below to run our testing framework.
+
 `ctetproject/manage.py`
 
 A command-line utility that allows us to interact with the Django project in various ways. For example, you can use it to run the development server, sync the database and for running tests.
@@ -48,8 +59,6 @@ A command-line utility that allows us to interact with the Django project in var
 Developers, please view the `dev_installation.md` for instructions.
 
 ---
-
-
 
 ## Installation
 
@@ -76,19 +85,11 @@ Developers, please view the `dev_installation.md` for instructions.
    npm start
    ```
 
-## Tech-Stack Introduction
+## Testing Framework & Execution
 
-Full Tech-Stack research and justification document can be found [here](https://docs.google.com/document/d/1UnLRnXmW2PSrgQ18GIVt_LTlBGbwnZAgDI9Yb7_5MJA/edit).
+##### BACKEND
 
-The Conference Travel Emissions Tool is built upon a Django rest framework which utilises ReactJS for frontend development.
-
-Combining Django on the backend with React on the frontend offers a cohesive development environment. This synergy enables rapid development, scalability, and enhanced user experience. Django's backend capabilities seamlessly integrate with React's component-based architecture, ensuring efficient communication between the server and client sides. With strong community support and extensive ecosystems, this tech stack accelerates development, fosters scalability, and ensures maintainability for the Conference Travel Emissions Tool. This Tech-Stack is highly suitabe for CTET's minimum viable project goals and will also assist in future extensions as we aim to implement the database.
-
----
-
-## Testing
-
-##### Standalone Emissions Algorithm Testing
+###### Standalone Emissions Algorithm Testing
 
 Following aspects of the emissions algorithm (`ctetproject/ctetproject/emissions_algo.py`) has been tested:
 
@@ -99,7 +100,6 @@ Following aspects of the emissions algorithm (`ctetproject/ctetproject/emissions
 **Caching Mechanism** - evaluating caching effectiveness by checking for unnecessary API calls
 
 **Input Validation** - input types, non-string city names - empty input scenarios etc.
-
 
 *How to execute the tests:*
 
@@ -115,3 +115,69 @@ Following aspects of the emissions algorithm (`ctetproject/ctetproject/emissions
    ```
    python manage.py test ctetproject/
    ```
+
+---
+
+##### FRONTEND & HYBRID
+
+###### Automated Tests
+
+To run the full pipeline and other automated tests of the CTET tool follow the following instructions:
+
+Similar to the *installation* section, please launch the backend server and the website.
+
+```
+Launch backend localhost server:
+cd ctetproject/
+python manage.py runserver
+
+In an alternative terminal, launch the website localhost:
+cd ctetproject/frontend/
+npm start
+```
+
+1. While the backend and frontend website servers are running, open a new terminal and navigate to the `testing/` directory:
+
+   ```
+   cd ctetproject/testing/
+   ```
+2. Execute the automated tests one-by-one:
+
+   ```
+   python testing_automated_full_pipeline.py
+   ```
+
+   ```
+   python testing_automated_manual_entry.py
+   ```
+
+   ```
+   python testing_automated_csv.py
+   ```
+
+   Each of these executions will open up your default browser and perform the automated usage scenario. Be patient as it may take some time depending on your machine performance.
+
+   Feel free to shutdown the localhost servers upon completion.
+
+###### Unit Tests
+
+From the root directory, navigate to the following directory:
+
+```
+cd ctetproject/
+```
+
+Then execute the tests by running the following command:
+
+```
+pytest
+```
+
+
+## Tech-Stack Introduction
+
+Full Tech-Stack research and justification document can be found [here](https://docs.google.com/document/d/1UnLRnXmW2PSrgQ18GIVt_LTlBGbwnZAgDI9Yb7_5MJA/edit).
+
+The Conference Travel Emissions Tool is built upon a Django rest framework which utilises ReactJS for frontend development.
+
+Combining Django on the backend with React on the frontend offers a cohesive development environment. This synergy enables rapid development, scalability, and enhanced user experience. Django's backend capabilities seamlessly integrate with React's component-based architecture, ensuring efficient communication between the server and client sides. With strong community support and extensive ecosystems, this tech stack accelerates development, fosters scalability, and ensures maintainability for the Conference Travel Emissions Tool. This Tech-Stack is highly suitabe for CTET's minimum viable project goals and will also assist in future extensions as we aim to implement the database.

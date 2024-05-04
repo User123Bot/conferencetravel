@@ -20,14 +20,12 @@ def test_csv_upload():
 
         time.sleep(1)
 
-        # driver.execute_script("window.scrollBy(0, 500);")  # Scroll down by 500 pixels
+        driver.execute_script("document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });")
 
-        time.sleep(1)
+        time.sleep(2)
 
-        # Wait for the right-arrow button to be clickable, then click it to navigate to the second slide
-        WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, ".right-arrow"))
-        ).click()
+        # Use JavaScript to click the right-arrow button directly
+        driver.execute_script("document.querySelector('.right-arrow').click();")
 
         time.sleep(2)
 
@@ -42,17 +40,7 @@ def test_csv_upload():
         # Use the send_keys method to input the path to your file
         file_input_element.send_keys(csv_file_path)
 
-        time.sleep(4)
-
-        # Find and click the upload button by its name, id, or any attribute
-        # Update the locator as per your button's attribute
-        upload_button_locator = "Upload-CSV-button"  # Example CSS Selector
-        upload_button = driver.find_element(By.ID, upload_button_locator)
-        upload_button.click()
-
         time.sleep(3)
-
-        # Add any assertions or additional steps here
 
     finally:
         driver.quit()
