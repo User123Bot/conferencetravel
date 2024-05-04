@@ -245,7 +245,7 @@ input[type="text"] {
 
 .data-row {
   display: grid;
-  grid-template-columns: 2fr 1fr; /* Adjust the fr units here */
+  grid-template-columns: 3fr 0.5fr 0.1fr; /* Adjust the fr units here */
   align-items: center;
   padding: 10px 20px;
   border-radius: 30px;
@@ -363,6 +363,16 @@ input[type="text"] {
   font-size: 1.5rem;
   padding: 0;
 }
+
+.remove-guest-button {
+  background: none;
+  border: none;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  font-size: 2vh;
+  cursor: pointer;
+}
+
 
 /* Style for the display of preferred cities */
 .preferred-cities-display {

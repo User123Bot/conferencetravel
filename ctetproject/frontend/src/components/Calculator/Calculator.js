@@ -494,9 +494,23 @@ const Calculator = () => {
     setHighlightedOriginIndex(-1);
   };
 
-const removeOriginCity = (indexToRemove) => {
-  setOriginCities(originCities.filter((_, index) => index !== indexToRemove));
-};
+  const handleRemoveGuestInfo = (itemToRemove) => {
+    // Update the uploadResult to filter out the removed item
+    setUploadResult(prevState => ({
+      ...prevState,
+      results: {
+        ...prevState.results,
+        data: prevState.results.data.filter(item => item.city !== itemToRemove.city || item.country !== itemToRemove.country)
+      }
+    }));
+  
+    // Update the guestInformation to filter out the removed item
+    setguestInformation(prevGuestInfo =>
+      prevGuestInfo.filter(guest => `${guest.name}` !== `${itemToRemove.city}, ${itemToRemove.country}`)
+    );
+  };
+  
+  
 
   // Calculator component code using ManualCarousel
   return (
@@ -602,13 +616,16 @@ const removeOriginCity = (indexToRemove) => {
                 <animated.div 
                   style={{
                     ...style, 
-                    backgroundColor: colors[index % colors.length]  // Cycle through colors array based on index
+                    backgroundColor: colors[index % colors.length]  // cycle through colors array based on index
                   }} 
                   className="data-row" 
                   key={item.city + item.country}
                 >
                   <span>{item.city}, {item.country}</span>
                   <span>{item.number}</span>
+                  <button onClick={() => handleRemoveGuestInfo(item)} className="remove-guest-button">
+                    &times;
+                  </button>
                 </animated.div>
               ))}
             </div>
