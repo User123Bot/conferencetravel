@@ -398,7 +398,7 @@ const Calculator = () => {
     // handle no user input
     if (preferredCities.length === 0 && guestInformation.length === 0) {
       setEmptyListNotification("Please fill in preferred location(s) and guest information.")
-    } else if (preferredCities.length == 0) {
+    } else if (preferredCities.length === 0) {
       setEmptyListNotification("Please add preferred location(s) in the previous section.")
     } else if(guestInformation.length === 0) {
       setEmptyListNotification("Please add guest information.")
