@@ -38,6 +38,8 @@ const GlobeMap = ({ cities, colors }) => {
       projection: { name: "globe" },
     });
 
+    
+
     //adding markers for cities array
     cities.forEach((city, index) => {
       // create a DOM element for each marker
@@ -50,11 +52,14 @@ const GlobeMap = ({ cities, colors }) => {
       }" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
         <span class="marker-label">${city.name}</span>`;
 
+      if (index === 0) {
+        map.setCenter(city.coordinates)
+      }
       // add the marker to the map
       new mapboxgl.Marker(marker_element)
         .setLngLat(city.coordinates)
         .addTo(map);
-    });
+      });
 
     // remove navigation controls from the map
     map.removeControl(new mapboxgl.NavigationControl());

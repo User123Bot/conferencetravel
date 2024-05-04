@@ -11,6 +11,7 @@ filelock
 geopy
 identify
 mypy-extensions
+npm
 nodeenv
 numpy
 packaging
