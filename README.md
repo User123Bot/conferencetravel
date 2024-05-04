@@ -29,7 +29,6 @@ Actual python package for the project. It is where the settings and main configu
 * `views.py`: Main python file to handle the backend logic of the website. For example, this is used to handle CSV parser upon user uploads.
 * `wsgi.py`: Provides an entry point for WSGI-compatible web servers to serve our project, essentially used for deployment.
 
-
 `frontend/`
 
 This is the frontend app for our project, it uses ReactJS. This is where we will develop frontend designs and features specific to our website.
@@ -48,10 +47,71 @@ A command-line utility that allows us to interact with the Django project in var
 
 Developers, please view the `dev_installation.md` for instructions.
 
+---
+
+
+
+## Installation
+
+1. Clone the CTET repository into your desired location.
+
+   ```
+   git clone https://gitlab.cecs.anu.edu.au/u7287889/anu-techlauncher-travel-impact-tool.git
+   ```
+2. Install the dependencies.
+
+   ```
+   pip install -r requirements.txt
+   ```
+3. Launch backend localhost server.
+
+   ```
+   cd ctetproject/
+   python manage.py runserver
+   ```
+4. In an alternative terminal, launch the website localhost.
+
+   ```
+   cd ctetproject/frontend/
+   npm start
+   ```
+
 ## Tech-Stack Introduction
 
 Full Tech-Stack research and justification document can be found [here](https://docs.google.com/document/d/1UnLRnXmW2PSrgQ18GIVt_LTlBGbwnZAgDI9Yb7_5MJA/edit).
 
-The Conference Travel Emissions Tool is built upon a Django rest framework which utilises ReactJS for frontend development. 
+The Conference Travel Emissions Tool is built upon a Django rest framework which utilises ReactJS for frontend development.
 
-Combining Django on the backend with React on the frontend offers a cohesive development environment. This synergy enables rapid development, scalability, and enhanced user experience. Django's backend capabilities seamlessly integrate with React's component-based architecture, ensuring efficient communication between the server and client sides. With strong community support and extensive ecosystems, this tech stack accelerates development, fosters scalability, and ensures maintainability for the Conference Travel Emissions Tool. This Tech-Stack is highly suitabe for CTET's minimum viable project goals and will also assist in future extensions as we aim to implement the database. 
+Combining Django on the backend with React on the frontend offers a cohesive development environment. This synergy enables rapid development, scalability, and enhanced user experience. Django's backend capabilities seamlessly integrate with React's component-based architecture, ensuring efficient communication between the server and client sides. With strong community support and extensive ecosystems, this tech stack accelerates development, fosters scalability, and ensures maintainability for the Conference Travel Emissions Tool. This Tech-Stack is highly suitabe for CTET's minimum viable project goals and will also assist in future extensions as we aim to implement the database.
+
+---
+
+## Testing
+
+##### Standalone Emissions Algorithm Testing
+
+Following aspects of the emissions algorithm (`ctetproject/ctetproject/emissions_algo.py`) has been tested:
+
+**API and Geolocation Handling** - API response validation, geolocation failures with mock data.
+
+**Data Integrity and Condition** - computation of distances and emissions - boundary tests of flight categories (short haul/long haul etc.). Testing zero and negative values.
+
+**Caching Mechanism** - evaluating caching effectiveness by checking for unnecessary API calls
+
+**Input Validation** - input types, non-string city names - empty input scenarios etc.
+
+
+*How to execute the tests:*
+
+1. Navigate to the backend directory. Todo this, while inside the root of the repository, execute:
+
+   ```
+   cd ctetproject/
+   ```
+
+   Once inside the directory, you should be able to see a python file named `manage.py`.
+2. Execute backend testing:
+
+   ```
+   python manage.py test ctetproject/
+   ```
