@@ -36,7 +36,7 @@
 
 .city-tile {
   display: grid;
-  grid-template-columns: 5vh 30vh 30vh; /* Three columns: index, city name, and emissions */
+  grid-template-columns: 0.4fr 2fr 2fr; 
   text-align: center;
   gap: 10px; /* Adjust gap to your liking */
   padding: 10px;
