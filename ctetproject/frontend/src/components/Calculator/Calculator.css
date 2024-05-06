@@ -461,6 +461,11 @@ input[type="text"] {
   margin-bottom: 5px;
 }
 
+.error-messages {
+  padding-bottom: 1.5vh;
+  color: #e24949;
+}
+
 /* Adjustments for smaller screens */
 @media (max-width: 768px) {
   .calculator-section {

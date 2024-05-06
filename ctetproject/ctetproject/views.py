@@ -78,8 +78,11 @@ class CSVUploadView(APIView):
         # This dictionary will store city as key and a tuple (total_number, id) as value
         city_data = {}
 
-        # List to store error messages
-        errors = []
+        # Create sets for individual cities and countries for detailed error checking
+        cities = {key[0] for key in cities_set.keys()}
+        countries = {key[1] for key in cities_set.keys()}
+
+        errors = ["CSV was parsed but errors were found:"]
 
         # Read the uploaded CSV file and print the column headers
         try:
@@ -92,9 +95,7 @@ class CSVUploadView(APIView):
             expected_columns = {"Country", "City", "Number"}
             if not expected_columns.issubset(set(reader.fieldnames)):
                 return JsonResponse(
-                    {
-                        "error": "CSV does not have the required columns: Country, City and Number"
-                    },
+                    {"Error": "Missing required columns: Country, City and Number"},
                     status=400,
                 )
 
@@ -104,9 +105,7 @@ class CSVUploadView(APIView):
                 # Check for missing values or extra columns
                 if len(row) != 3:
                     if len(row) < 2:
-                        errors.append(
-                            f"Missing Columns: Make sure it is Country, City and Number"
-                        )
+                        errors.append(f"Missing Columns - Country, City and Number")
                     else:
                         errors.append(
                             f"Extra Columns only expected 3 (Country, City, Number)"
@@ -119,7 +118,7 @@ class CSVUploadView(APIView):
 
                 # Skip rows with missing data
                 if not country or not city or not number_str:
-                    errors.append(f"Missing data in row: {counter}")
+                    errors.append(f"Missing Data - ROW: {counter}")
                     continue
 
                 # Check if the number column is correctly formatted as an integer
@@ -127,15 +126,26 @@ class CSVUploadView(APIView):
                     number = int(number_str)
                 except ValueError:
                     errors.append(
-                        f"Malformed number, value is not an integer: {number_str}, row {counter}"
+                        f"Malformed Number, value is not an integer: {number_str} - ROW: {counter}"
                     )
                     continue
 
                 # Check if the city exists
                 if (city, country) not in cities_set:
-                    errors.append(
-                        f"Unrecognized City or Country: {city} : Country: {country}"
-                    )
+                    if city not in cities and country not in countries:
+                        errors.append(
+                            f"Neither the City: {city} or Country: {country} were recognised - ROW {counter}"
+                        )
+                    elif city not in cities:
+                        errors.append(f"Unrecognized City: {city} - ROW {counter}")
+                    elif country not in countries:
+                        errors.append(
+                            f"Unrecognized Country: {country} - ROW {counter}"
+                        )
+                    elif (city, country) not in cities_set:
+                        errors.append(
+                            f"Incorrect Classification: City {city} and Country: {country} are not related - ROW {counter}"
+                        )
                     continue
 
                 # Aggregate numbers for duplicate city values
@@ -162,6 +172,9 @@ class CSVUploadView(APIView):
                 ]
 
             logging.info("Finished CSV file processing.")
+
+            if len(errors) == 1:
+                errors.clear()
 
             # Check if there were any errors and print them
             if errors:

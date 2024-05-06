@@ -351,6 +351,13 @@ const Calculator = () => {
           console.log("Upload success:", data);
           mergeUploadResults(data);
           updateGuestInformationCSV(data)
+
+          const error_data = data.results.errors.join('<br />');
+
+          if (error_data != null){
+            setError(error_data);
+          }
+
         })
         .catch((error) => {
           console.error("Upload error:", error);
@@ -511,6 +518,7 @@ const Calculator = () => {
   };
   
   
+  
 
   // Calculator component code using ManualCarousel
   return (
@@ -575,7 +583,14 @@ const Calculator = () => {
             <h1>Your Attendees</h1>
             <p>Let us know who's joining and from where!</p>
           </div>
-          <p className="error-message">{error}</p>
+          <div className="error-messages">
+            {typeof error === 'string' && error.includes('<br />')
+              ? error.split('<br />').map((e, i) => (
+                  <div key={i} className="error-message">{e}</div>
+                ))
+              : <div className="error-message">{error}</div>
+            }
+          </div>
           <div className="content-container">
             <div className="input-container">
               <div className="input-group">
