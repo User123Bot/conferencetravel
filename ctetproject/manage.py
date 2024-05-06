@@ -4,8 +4,19 @@ import os
 import sys
 
 
+def setup_ssl_certification():
+
+    if sys.platform == "darwin":
+        import certifi
+
+        os.environ["SSL_CERT_FILE"] = certifi.where()
+    else:
+        print("No SSL Certification Verification Required.")
+
+
 def main():
     """Run administrative tasks."""
+    setup_ssl_certification()
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ctetproject.settings")
     try:
         from django.core.management import execute_from_command_line
