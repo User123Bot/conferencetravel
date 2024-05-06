@@ -17,6 +17,10 @@ city_count_test_cases = [
     ("missing_rows.csv", {"Sydney": 10, "Canberra": 11, "Brisbane": 20}),
     ("multiple_cities.csv", {"Sydney": 10, "Canberra": 15, "Darwin": 16}),
     ("not_2_rows.csv", {"Sydney": 10}),
+    ("cities_too_long.csv", {"Sydney": 2000, "Canberra": 1000, "Brisbane": 4000, "Darwin": 3000, "Newcastle": 200}),\
+    ("city_not_in_country.csv", {"Sydney": 10}),
+    ("not_a_real_city.csv", {"Sydney": 10}),
+    ("not_a_real_country.csv", {"Sydney": 10}),
 ]
 
 
