@@ -3,9 +3,7 @@ import React, { useRef, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import "./Results.css";
 
-//import and setup mapbox access key
-import config from "../../config.js";
-mapboxgl.accessToken = config.MAPBOX_SECRET_KEY;
+mapboxgl.accessToken = process.env.MAPBOX_SECRET_KEY;
 
 const GlobeMap = ({ cities, colors }) => {
   const mapContainer = useRef(null);
