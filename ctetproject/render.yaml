@@ -25,3 +25,5 @@ services:
     envVars:
       - key: PORT
         value: '3000'
+      - key: MAPBOX_SECRET_KEY
+        value: pk.eyJ1Ijoic2FtbWFuLXBhbGkiLCJhIjoiY2x1dXAyNGxmMGNqczJscG9sZHV1NWdjYyJ9.ojHk9vAjlzZm3R096LV6fg
