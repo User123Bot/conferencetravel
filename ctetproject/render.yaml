@@ -3,18 +3,18 @@ services:
     name: ctetproject-backend
     env: python
     buildCommand: |
-      cd backend
+      cd ctetproject/backend
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
-      cd ../frontend
+      cd ../../frontend
       npm install
       npm run build
     startCommand: |
-      cd backend
+      cd ctetproject/backend
       gunicorn ctetproject.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: ctetproject.settings
+        value: ctetproject.ctetproject.settings
       - key: SECRET_KEY
         value: your_secret_key
       - key: ALLOWED_HOSTS
