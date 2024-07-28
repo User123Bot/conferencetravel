@@ -5,16 +5,16 @@ FROM python:3.12
 WORKDIR /app
 
 # Copy the backend requirements file into the container
-COPY ctetproject/backend/requirements.txt /app/
+COPY backend/requirements.txt /app/
 
 # Install the Python dependencies
 RUN pip install -r requirements.txt
 
 # Copy the entire backend project into the container
-COPY ctetproject/backend/ /app/
+COPY backend/ /app/
 
 # Copy the built frontend into the container
-COPY ctetproject/frontend/build /app/frontend/build
+COPY frontend/build /app/frontend/build
 
 # Set environment variables
 ENV DJANGO_SETTINGS_MODULE=ctetproject.settings
