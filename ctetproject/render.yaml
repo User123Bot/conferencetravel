@@ -9,9 +9,9 @@ services:
       cd ../../frontend
       npm install
       npm run build
-      cd ../ctetproject/backend
+      cd ../backend
     startCommand: |
-      cd ctetproject/backend
+      cd ctetproject/backend/ctetproject
       gunicorn ctetproject.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
