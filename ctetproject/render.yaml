@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: ctetproject
+    env: python
+    buildCommand: |
+      cd ctetproject
+      pip install -r requirements.txt
+      cd ../frontend
+      npm install
+      npm run build
+    startCommand: |
+      cd ctetproject
+      gunicorn myproject.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: myproject.settings
+      - key: DJANGO_SECRET_KEY
+        value: 2UsllC5q4rvZLJIZFzhmxOXUC3NhZ9dnREYc1Riu_SNxLVUz_pA
