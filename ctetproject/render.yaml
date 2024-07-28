@@ -10,8 +10,8 @@ services:
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: backend.ctetproject.settings
-      - key: SECRET_KEY
-        value: your_secret_key
+      - key: MAPBOX_SECRET_KEY
+        value: pk.eyJ1Ijoic2FtbWFuLXBhbGkiLCJhIjoiY2x1dXAyNGxmMGNqczJscG9sZHV1NWdjYyJ9.ojHk9vAjlzZm3R096LV6fg
       - key: ALLOWED_HOSTS
         value: 'conferencetravel.onrender.com'
 
