@@ -3,7 +3,7 @@ services:
     name: ctetproject
     env: python
     buildCommand: |
-      cd ctetproject
+      cd ctetproject/backend
       pip install -r requirements.txt
       cd ../frontend
       npm install
@@ -14,5 +14,3 @@ services:
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: myproject.settings
-      - key: DJANGO_SECRET_KEY
-        value: 2UsllC5q4rvZLJIZFzhmxOXUC3NhZ9dnREYc1Riu_SNxLVUz_pA
