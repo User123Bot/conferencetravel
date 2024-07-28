@@ -1,16 +1,22 @@
 services:
   - type: web
-    name: myproject
+    name: ctetproject-backend
     env: python
     buildCommand: |
-      cd backend
+      cd ctetproject/backend
       pip install -r requirements.txt
-      cd ../frontend
+      python manage.py collectstatic --noinput
+      cd ../../frontend
       npm install
       npm run build
+      cd ../ctetproject/backend
     startCommand: |
-      cd backend
-      gunicorn myproject.wsgi
+      cd ctetproject/backend
+      gunicorn ctetproject.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: myproject.settings
+        value: ctetproject.settings
+      - key: SECRET_KEY
+        value: your_secret_key
+      - key: ALLOWED_HOSTS
+        value: 'your-app-name.onrender.com'
