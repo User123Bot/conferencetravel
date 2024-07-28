@@ -33,3 +33,4 @@ virtualenv
 pytest
 pytest-django
 webdriver_manager
+gunicorn
