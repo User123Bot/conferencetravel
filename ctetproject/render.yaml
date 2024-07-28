@@ -6,7 +6,7 @@ services:
       pip install -r requirements.txt
       python backend/manage.py collectstatic --noinput --clear
     startCommand: |
-      python backend/manage.py runserver 0.0.0.0:8000
+      python backend/manage.py runserver
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: backend.ctetproject.settings
