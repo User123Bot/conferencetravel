@@ -1,16 +1,12 @@
 services:
   - type: web
-    name: ctetproject
-    env: python
-    buildCommand: |
-      cd ctetproject/backend
-      pip install -r requirements.txt
-      cd ../../frontend
-      npm install
-      npm run build
-    startCommand: |
-      cd ctetproject
-      gunicorn myproject.wsgi:application
+    name: ctetproject-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: myproject.settings
+        value: ctetproject.settings
+      - key: SECRET_KEY
+        value: your_secret_key
+      - key: ALLOWED_HOSTS
+        value: 'conferencetravel.onrender.com'
