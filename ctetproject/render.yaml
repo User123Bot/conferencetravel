@@ -4,12 +4,12 @@ services:
     env: python
     buildCommand: |
       pip install -r requirements.txt
-      python backend/manage.py collectstatic --noinput
+      python backend/manage.py collectstatic --noinput --clear
     startCommand: |
       python backend/manage.py runserver 0.0.0.0:$PORT
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: ctetproject.settings
+        value: backend.ctetproject.settings
       - key: SECRET_KEY
         value: your_secret_key
       - key: ALLOWED_HOSTS
@@ -19,10 +19,9 @@ services:
     name: ctetproject-frontend
     env: node
     buildCommand: |
-      npm install
-      npm run build
+      cd frontend && npm install && npm run build
     startCommand: |
-      npm start
+      cd frontend && npm start
     envVars:
       - key: PORT
         value: '3000'
